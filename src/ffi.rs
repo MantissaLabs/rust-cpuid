@@ -1,5 +1,5 @@
+use libc::{c_char, c_int, int32_t, uint32_t, uint64_t, uint8_t};
 use std::default::Default;
-use libc::{c_int, c_char, uint8_t, uint32_t, int32_t, uint64_t};
 
 pub const VENDOR_STR_MAX: usize = 16;
 pub const BRAND_STR_MAX: usize = 64;
@@ -133,7 +133,7 @@ impl Default for cpu_id_t {
 }
 
 #[link(name = "cpuid")]
-extern {
+extern "C" {
     pub fn cpuid_present() -> c_int;
     pub fn cpuid_lib_version() -> *const c_char;
     pub fn cpuid_error() -> *const c_char;

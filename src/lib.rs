@@ -72,13 +72,17 @@ pub struct CpuInfo {
     pub num_logical_cpus: i32,
     /// Total number of logical processors.
     pub total_logical_cpus: i32,
-    /// L1 data cache size in kB. `Some(0)` if the CPU lacks cache, `None` if it couldn't be determined.
+    /// L1 data cache size in kB. `Some(0)` if the CPU lacks cache, `None` if it
+    /// couldn't be determined.
     pub l1_data_cache: Option<i32>,
-    /// L1 instruction cache size in kB. `Some(0)` if the CPU lacks cache, `None` if it couldn't be determined.
+    /// L1 instruction cache size in kB. `Some(0)` if the CPU lacks cache,
+    /// `None` if it couldn't be determined.
     pub l1_instruction_cache: Option<i32>,
-    /// L2 cache size in kB. `Some(0)` if the CPU lacks L2 cache, `None` if it couldn't be determined.
+    /// L2 cache size in kB. `Some(0)` if the CPU lacks L2 cache, `None` if it
+    /// couldn't be determined.
     pub l2_cache: Option<i32>,
-    /// L3 cache size in kB. `Some(0)` if the CPU lacks L3 cache, `None` if it couldn't be determined.
+    /// L3 cache size in kB. `Some(0)` if the CPU lacks L3 cache, `None` if it
+    /// couldn't be determined.
     pub l3_cache: Option<i32>,
     flags: [u8; ffi::CPU_FLAGS_MAX],
 }
@@ -226,7 +230,10 @@ pub fn version() -> String {
     unsafe {
         let ptr = ffi::cpuid_lib_version();
         let bytes = CStr::from_ptr(ptr).to_bytes();
-        str::from_utf8(bytes).ok().expect("Invalid UTF8 string").to_string()
+        str::from_utf8(bytes)
+            .ok()
+            .expect("Invalid UTF8 string")
+            .to_string()
     }
 }
 
@@ -235,7 +242,10 @@ pub fn error() -> String {
     unsafe {
         let ptr = ffi::cpuid_error();
         let bytes = CStr::from_ptr(ptr).to_bytes();
-        str::from_utf8(bytes).ok().expect("Invalid UTF8 string").to_string()
+        str::from_utf8(bytes)
+            .ok()
+            .expect("Invalid UTF8 string")
+            .to_string()
     }
 }
 
@@ -258,14 +268,13 @@ pub fn identify() -> Result<CpuInfo, String> {
     } else {
         Ok(CpuInfo {
             vendor: String::from_utf8(data.vendor_str.iter().map(|&x| x as u8).collect())
-                        .ok()
-                        .expect("Invalid vendor string"),
+                .ok()
+                .expect("Invalid vendor string"),
             brand: String::from_utf8(data.brand_str.iter().map(|&x| x as u8).collect())
-                       .ok()
-                       .expect("Invalid brand string"),
+                .ok()
+                .expect("Invalid brand string"),
             codename: String::from_utf8(data.cpu_codename.iter().map(|&x| x as u8).collect())
-                          .ok()
-                          .expect("Invalid codename string"),
+                .unwrap_or_default(),
             num_cores: data.num_cores,
             num_logical_cpus: data.num_logical_cpus,
             total_logical_cpus: data.total_logical_cpus,
